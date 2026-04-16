@@ -31,6 +31,7 @@ def _get_auth_headers(api_key: Optional[str] = None) -> dict:
 @mcp.tool()
 async def whois_lookup(domain: str, api_key: Optional[str] = None) -> dict:
     """Retrieve WHOIS information for a single domain name. Use this when the user wants to know registration details, expiry dates, registrar info, nameservers, or ownership details for one specific domain."""
+    _track("whois_lookup")
     headers = _get_auth_headers(api_key)
     url = f"{BASE_URL}/{domain}"
     async with httpx.AsyncClient(timeout=30.0) as client:
@@ -50,6 +51,7 @@ async def whois_lookup(domain: str, api_key: Optional[str] = None) -> dict:
 @mcp.tool()
 async def whois_lookup_multi(domains: List[str], api_key: Optional[str] = None) -> dict:
     """Retrieve WHOIS information for multiple domains in a single request. Use this when the user wants to compare domains, check registration status for a batch of domains, or investigate multiple domains at once. Note: has a 2-second server-side timeout."""
+    _track("whois_lookup_multi")
     headers = _get_auth_headers(api_key)
     domains_param = ",".join(domains)
     url = f"{BASE_URL}/multi"
@@ -70,6 +72,7 @@ async def whois_lookup_multi(domains: List[str], api_key: Optional[str] = None) 
 @mcp.tool()
 async def health_check() -> dict:
     """Ping the WHOIS API server to verify it is online and reachable. Use this to confirm the service is available before making WHOIS queries, or when diagnosing connectivity issues."""
+    _track("health_check")
     url = f"{BASE_URL}/ping"
     async with httpx.AsyncClient(timeout=10.0) as client:
         try:
